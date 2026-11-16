@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flashcards</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="storage.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <a class="brand" href="#" aria-label="Flashcards home">
+        <span class="brand-mark" aria-hidden="true">F</span>
+        <span>Flashcards</span>
+      </a>
+      <button class="create-button" id="new-deck-button" type="button">+ New deck</button>
+    </header>
+
+    <aside class="sidebar" aria-label="Deck navigation">
+      <div class="sidebar-heading">
+        <h2>Your decks</h2>
+        <button class="icon-button" id="sidebar-new-deck-button" type="button" aria-label="Add a deck">+</button>
+      </div>
+      <nav aria-label="Decks">
+        <ul class="deck-list" id="deck-list"></ul>
+      </nav>
+      <div class="empty-state deck-empty-state" id="deck-empty-state" hidden>
+        <span class="empty-state-icon" aria-hidden="true">▤</span>
+        <h3>No decks yet</h3>
+        <p>Create a deck to start organizing your flashcards.</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="study-heading">
+        <div>
+          <p class="eyebrow" id="study-mode-label">DECK PREVIEW</p>
+          <h1 id="active-deck-title">Biology</h1>
+        </div>
+        <div class="deck-actions">
+          <button class="create-button" id="study-mode-button" type="button" aria-pressed="false">Study</button>
+          <button class="text-button" id="edit-deck-button" type="button">Edit deck</button>
+          <button class="text-button danger-button" id="delete-deck-button" type="button">Delete deck</button>
+        </div>
+      </div>
+
+      <section class="study-area" aria-label="Flashcard study area">
+        <div class="card-search-row">
+          <label for="card-search">Search cards</label>
+          <div class="card-search-controls">
+            <input id="card-search" type="search" autocomplete="off" aria-controls="study-results">
+            <button class="icon-button" id="clear-card-search" type="button" aria-label="Clear search" hidden>×</button>
+          </div>
+          <span id="search-match-count" role="status" aria-live="polite" aria-atomic="true">1 card</span>
+        </div>
+        <div class="card-toolbar">
+          <span id="card-position">Card 1 <span class="muted">of 1</span></span>
+          <div class="card-toolbar-actions">
+            <div class="card-actions" id="card-actions"></div>
+            <button class="create-button" id="new-card-button" type="button">+ New card</button>
+          </div>
+        </div>
+        <div class="card-scene" id="study-results">
+          <article class="card" id="study-card" aria-label="Flashcard" tabindex="0" aria-keyshortcuts="Space ArrowLeft ArrowRight">
+            <div class="card-face card-front" id="card-front" aria-hidden="false">
+              <p class="card-label">QUESTION</p>
+              <h2 id="card-front-text">What is the powerhouse of the cell?</h2>
+              <p class="card-hint">Front</p>
+            </div>
+            <div class="card-face card-back" id="card-back" aria-hidden="true">
+              <p class="card-label">ANSWER</p>
+              <h2 id="card-back-text">Mitochondria</h2>
+              <p class="card-hint">Back</p>
+            </div>
+          </article>
+          <section class="empty-state card-empty-state" id="card-empty-state" aria-labelledby="card-empty-title" hidden>
+            <span class="empty-state-icon" aria-hidden="true">▧</span>
+            <h2 id="card-empty-title">No cards yet</h2>
+            <p id="card-empty-description">Create a card with a front and back to begin studying.</p>
+            <button class="create-button" id="empty-state-create-card" type="button">+ New card</button>
+            <button class="text-button" id="empty-state-clear-search" type="button" hidden>Clear search</button>
+          </section>
+        </div>
+        <div class="card-controls">
+          <button class="text-button" id="shuffle-cards-button" type="button">Shuffle</button>
+          <button class="icon-button" id="previous-card-button" type="button" aria-label="Previous card">←</button>
+          <button class="reveal-button" type="button" aria-label="Flip card" aria-pressed="false">Flip</button>
+          <button class="icon-button" id="next-card-button" type="button" aria-label="Next card">→</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <span>Small steps add up.</span>
+      <span id="deck-summary">3 decks <span class="footer-divider">·</span> 3 cards</span>
+    </footer>
+  </div>
+
+  <dialog class="deck-dialog" id="deck-dialog" aria-labelledby="deck-dialog-title" tabindex="-1">
+    <form class="deck-form" id="deck-form">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow" id="deck-dialog-eyebrow">DECK</p>
+          <h2 id="deck-dialog-title">Create a deck</h2>
+        </div>
+        <button class="icon-button" id="close-deck-dialog" type="button" aria-label="Close dialog">×</button>
+      </div>
+      <label for="deck-name">Deck name</label>
+      <input id="deck-name" name="deck-name" type="text" maxlength="60" autocomplete="off" aria-describedby="deck-form-error" aria-invalid="false" required>
+      <p class="field-error" id="deck-form-error" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button class="text-button" id="cancel-deck-dialog" type="button">Cancel</button>
+        <button class="create-button" id="save-deck-button" type="submit">Create deck</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="deck-dialog" id="card-dialog" aria-labelledby="card-dialog-title" tabindex="-1">
+    <form class="deck-form" id="card-form">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow" id="card-dialog-eyebrow">NEW CARD</p>
+          <h2 id="card-dialog-title">Create a card</h2>
+        </div>
+        <button class="icon-button" id="close-card-dialog" type="button" aria-label="Close dialog">×</button>
+      </div>
+      <label for="card-front-input">Front</label>
+      <textarea id="card-front-input" name="front" rows="3" maxlength="2000" aria-describedby="card-form-error" aria-invalid="false" required></textarea>
+      <label for="card-back-input">Back</label>
+      <textarea id="card-back-input" name="back" rows="3" maxlength="2000" aria-describedby="card-form-error" aria-invalid="false" required></textarea>
+      <p class="field-error" id="card-form-error" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button class="text-button" id="cancel-card-dialog" type="button">Cancel</button>
+        <button class="create-button" id="save-card-button" type="submit">Create card</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>
